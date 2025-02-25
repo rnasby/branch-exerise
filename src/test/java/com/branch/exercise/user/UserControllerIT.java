@@ -30,6 +30,7 @@ public class UserControllerIT {
     public void testGetUser() throws Exception{
         final String USER = "octocat";
 
+        // TODO: Validate additional repos. The current test only validates the first repo.
         mockMvc.perform(MockMvcRequestBuilders.get("/users/{username}", USER))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
