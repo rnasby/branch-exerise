@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <th:block th:fragment="theOnlyOne">
+    <!--======================================= Component Start ==============================================-->
+
+    <script>
+      Vue.component("message", {
+        template: "#message-template",
+        props: {
+          init_title: String,
+          init_message: String
+        },
+        data : function () {
+          return {
+            title: this.init_title,
+            message: this.init_message,
+            isShow: (this.init_message != null)
+          }
+        },
+        methods: {
+          show(title, message) {
+            this.isShow = true;
+            this.title = title;
+            this.message = message;
+          }
+        }
+      });
+    </script>
+
+    <script type="text/x-template" id="message-template">
+      <div>
+        <b-modal :title="title + ':'" v-model="isShow" size="xl" scrollable centered hide-footer>
+          <pre>{{message}}</pre>
+        </b-modal>
+      </div>
+    </script>
+
+  </th:block>
+</html>

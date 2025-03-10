@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <title>Test Application</title>
+        <script th:replace="~{vue/appHead :: theOnlyOne}"></script>
+    </head>
+
+    <body style="padding-top: 56px;">
+        <script th:inline="javascript">
+            /*[+
+            const DATA = [[${data}]];
+            +]*/
+        </script>
+
+        <script th:replace="~{vue/appMethods :: theOnlyOne}"></script>
+
+        <script th:replace="~{vue/login :: theOnlyOne}"></script>
+        <script th:replace="~{vue/menuBar :: theOnlyOne}"></script>
+        <script th:replace="~{vue/message :: theOnlyOne}"></script>
+
+        <script th:replace="~{vue/home :: theOnlyOne}"></script>
+
+        <!--  ======================================= Vue Application ============================================== -->
+
+        <div id="app">
+            <menubar :title="applicationTitle" :routes="routes">
+                <template v-slot:login>
+                    <login :init_user="user"></login>
+                </template>
+            </menubar>
+
+            <router-view></router-view>
+
+            <div class="align-middle" style="margin: auto; width: 75%; padding-top: 20px">
+               <div v-html="message"></div>
+            </div>
+
+            <message :init_message="error" :init_title="'Error'"></message>
+        </div>
+
+        <script>
+            const routes = [
+                { path: '/home', name: "Home", component: Home }
+            ];
+
+            const router = new VueRouter({
+                routes,
+                base : "/app",
+                mode : "history"
+            });
+
+            let vm = new Vue({
+                router,
+                el: "#app",
+                data: {
+                    routes: routes,
+                    user: DATA.user,
+                    menu: DATA.menu,
+                    error: DATA.error,
+                    message: DATA.message,
+                    applicationTitle: DATA.applicationTitle
+                },
+                created() {
+                    if (window.location.pathname !== '/app/home') router.push('/home');
+                }
+            });
+        </script>
+    </body>
+</html>

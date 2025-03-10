@@ -1,0 +1,29 @@
+spring:
+  application.name: exercise
+
+  # Set to format JSON output.
+  jackson.serialization.indent-output: true
+
+server:
+  ssl:
+     enabled: false
+     # Set to true after running ./generate-test-keystore.sh to create a keystore for testing
+
+     key-alias: testing
+     key-store-password: testing
+     key-store: file:${TMP}/testing.jks
+
+management:
+  endpoints:
+    # Set to expose actuator endpoints.
+    web:
+      exposure.include: "*"
+      discovery.enabled: true
+
+    # Set to format actuator JSON output.
+    jackson.isolated-object-mapper: false
+
+logging:
+  level:
+     com.branch.exercise: TRACE
+     org.springframework.web: TRACE

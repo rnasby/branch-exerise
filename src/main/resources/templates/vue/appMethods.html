@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <th:block th:fragment="theOnlyOne">
+        <!-- ================================= appMethods Start ================================== -->
+        <script>
+            Vue.prototype.$epochDateTimeLocalFormat = function(epochDate) {
+                if (epochDate === undefined) {
+                    return "";
+                } else {
+                    let date = new Date(epochDate);
+                    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+                }
+            }
+
+            Vue.prototype.$widthStyle = function(width) {
+                return {"{ width": width + "px", "min-width": width + "px", "max-width": width + "px }"}
+            }
+
+        </script>
+        <!-- ================================= appMethods End ================================== -->
+    </th:block>
+</html>

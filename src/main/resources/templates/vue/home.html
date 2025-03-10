@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <th:block th:fragment="theOnlyOne">
+        <script>
+            let Home = Vue.component("home", {
+                template: "#home-template",
+                data: function () {
+                    return {
+                        jar: null,
+                        error: null,
+                        server: null,
+                        loaded: false,
+                        loading: false
+                    }
+                },
+                created() {
+                    this.load();
+                    this.$root.$refs.currentControl = this;
+                },
+                methods: {
+                    load() {
+                        this.error = null;
+                        this.loaded = false;
+                        this.loading = true;
+
+<!--                        axios.get("/serverData")-->
+<!--                            .then(response => {-->
+<!--                                this.loading = false;-->
+<!--                                let data = response.data;-->
+
+<!--                                if (data.error) {-->
+<!--                                    this.error = data.error;-->
+<!--                                } else {-->
+<!--                                    this.loaded = true;-->
+<!--                                    this.jar = data.jar;-->
+<!--                                    this.server = data.server;-->
+<!--                                }-->
+
+<!--                            }).catch(error => {-->
+<!--                                this.error = error;-->
+<!--                                this.loading = false;-->
+<!--                            });-->
+                    }
+                }
+            });
+        </script>
+
+        <script type="text/x-template" id="home-template">
+            <div>
+                <b-button>Button</b-button>
+                <b-button variant="danger">Button</b-button>
+                <b-button variant="success">Button</b-button>
+                <b-button variant="outline-primary">Button</b-button>
+            </div>
+        </script>
+    </th:block>
+</html>

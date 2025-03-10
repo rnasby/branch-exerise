@@ -1,0 +1,11 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <body>
+        <table>
+            <tr th:each="course: ${courses}">
+                <td th:text="${course.id}"></td>
+                <td th:text="${course.name}"></td>
+                <td th:text="${course.description}"></td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <title>Wait</title>
+        <script th:replace="~{vue/appHead :: theOnlyOne}"></script>
+    </head>
+
+    <body style="padding-top: 56px;">
+        <script th:replace="~{vue/appHead :: theOnlyOne}"></script>
+        <script th:replace="~{vue/message :: theOnlyOne}"></script>
+
+        <!--  ======================================= Application ================================================= -->
+
+        <div id="app">
+            <div class="align-middle text-center" style="margin: auto; width: 75%; padding-top: 20px">
+                <h1>{{title}}</h1>
+                <br/><br/><br/>
+                <b-spinner :hidden="waitDone" style="width: 16rem; height: 16rem" variant="primary" label="Working..."></b-spinner>
+                <div class="text-left" :hidden="error == null">
+                    <h4>Error:</h4>
+                    <div v-html="error"></div>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            /*[+
+            let data = JSON.parse([[${data}]]);
+            +]*/
+
+            let vm = new Vue({
+                el: "#app",
+                data: {
+                    waitDone: false,
+                    title: data.title,
+                    waitURL: data.waitURL,
+                    isRedirect: data.isRedirect,
+                    error: null
+                },
+                mounted() {
+                    if (this.isRedirect) {
+                        window.location.href = data.waitURL;
+                    } else {
+                        axios.get(this.waitURL)
+                            .then(response => {
+                                try {
+                                    this.waitDone = true;
+                                    let data = JSON.parse(response.data);
+
+                                    if (data.error) {
+                                        this.error = data.error;
+                                    } else {
+                                        window.location = data.url;
+                                    }
+                                } catch (e) {
+                                    this.error = e;
+                                }
+                            }).catch(error => {
+                                this.error = error;
+                                this.waitDone = true;
+                        });
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

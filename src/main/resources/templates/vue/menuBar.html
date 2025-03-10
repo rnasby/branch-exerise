@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="theOnlyOne">
+    <!--======================================= Component Start ==============================================-->
+
+    <script>
+        Vue.component("menubar", {
+            template: "#menubar-template",
+            props: {
+                /**
+                 * Title to show in menu.
+                 */
+                title: String,
+
+                /**
+                 * Routes array used to initialize VueRouter.
+                 */
+                routes: Array
+            }
+        });
+    </script>
+
+    <script type="text/x-template" id="menubar-template">
+        <div>
+            <b-navbar toggleable="lg" type="dark" variant="primary" fixed="top">
+                <b-navbar-brand>{{title}}:</b-navbar-brand>
+
+                <b-collapse id="nav-collapse" is-nav>
+                    <b-navbar-nav>
+                        <b-nav-item v-for="(route, index) in routes" :key="route.id" :to="route.path"
+                                    :active="$route.name == route.name">{{route.name}}</b-nav-item>
+                    </b-navbar-nav>
+                    <b-navbar-nav class="ml-auto">
+                        <b-button class="mr-2" variant="dark" v-b-tooltip.hover title="Click to reload tab content">
+                            <b-icon icon="arrow-clockwise" @click="$root.$refs.currentControl.load()"></b-icon>
+                        </b-button>
+
+                        <slot name="login"></slot>
+                    </b-navbar-nav>
+                </b-collapse>
+            </b-navbar>
+        </div>
+    </script>
+</th:block>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <th:block th:fragment="theOnlyOne">
+    <!--======================================= Component Start ==============================================-->
+
+    <script>
+      Vue.component("login", {
+        template: "#login-template",
+        props: {
+          /**
+           * Initial user object if user is logged in, else null.
+           *    Object: {id: String, fullName: String}, Example: {id: "bbarker", fullName: "Bob Barker"}
+           */
+          init_user: Object
+        },
+        created() {
+          window.loginComponent = this;
+          this.$root.$refs.currentControl = this;
+        },
+        data: function () {
+          return {
+            isShow: false,
+            askUserID: null,
+            askPassword: null,
+            loginError: null,
+            logoutError: null,
+            user: this.init_user
+          }
+        },
+        methods: {
+          loginAsk() {
+            this.isShow = true;
+            this.loginError = null;
+          },
+          login() {
+            this.user = null;
+            this.loginError = null;
+            let params = "username=" + encodeURIComponent(this.askUserID) + "&password=" + encodeURIComponent(
+                    this.askPassword);
+
+            axios.post("/login", params)
+              .then(response => {
+                this.isShow = false;
+                this.user = response.data;
+              }).catch(error => {
+                this.loginError = error;
+            });
+          },
+          logout() {
+            this.logoutError = null;
+
+            axios.get("/logout")
+                .then(response => {
+                   this.user = null;
+                }).catch(error => {
+                   this.logoutError = error;
+                   this.$refs['logoutError'].show()
+            });
+          },
+          getUserID() {
+             return (this.user == null ? "" : this.user.id);
+          }
+        },
+        computed: {
+          isLoggedIn() {
+             return (this.user != null);
+          },
+          isAutomationAdmin() {
+             return (this.user != null && this.user.isAutomationAdmin);
+          },
+          userDisplay() {
+             return (this.user == null ? "" : this.user.id + " (" + this.user.fullName + ")");
+          }
+        }
+      });
+    </script>
+
+    <script type="text/x-template" id="login-template">
+      <div>
+        <b-button v-show="!isLoggedIn" @click="loginAsk" variant="dark" v-b-tooltip.hover
+                  title="Click to login">Login</b-button>
+        <b-button v-show="isLoggedIn" @click="logout" variant="dark" v-b-tooltip.hover
+                  title="Click to logout">{{userDisplay}}</b-button>
+
+        <b-modal centered hide-footer v-model="isShow" title="Login" header-bg-variant="dark" header-text-variant="light">
+          <b-form v-on:submit.prevent="login">
+            <p>Enter Credentials:</p>
+            <b-form-group label="User ID:">
+              <b-form-input id="username" name="username" autocomplete="username" v-model="askUserID"
+                            autofocus v-on:keydown.enter="login"></b-form-input>
+            </b-form-group>
+            <b-form-group label="Password:">
+              <b-form-input id="password" name="password" type="password" autocomplete="password"
+                            v-model="askPassword" v-on:keydown.enter="login"></b-form-input>
+            </b-form-group>
+
+            <pre style="color: darkred">{{loginError}}</pre>
+
+            <div class="text-right">
+              <b-button variant="primary" @click="login">Login</b-button>
+            </div>
+          </b-form>
+        </b-modal>
+
+        <b-modal ref="logoutError"
+                 title="Logout Failed"
+                 centered hide-footer
+                 :header-bg-variant="'dark'"
+                 :header-text-variant="'light'">
+
+          <p>{{logoutError}}</p>
+        </b-modal>
+
+      </div>
+    </script>
+
+  </th:block>
+</html>
