@@ -5,7 +5,7 @@ import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 
-interface GitHubAPI {
+public interface GitHubAPI {
     @GetExchange("/users/{username}")
     GitHubUser getUser(@PathVariable("username") String username);
 

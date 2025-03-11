@@ -32,7 +32,7 @@ class UserServiceImpl implements UserService {
             return gitHubService.getUser(username);
         } catch (Throwable t) {
             LOGGER.error("Failed to get GitHub user", t);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get GitHub user");
+            throw t;
         }
     }
 
@@ -43,7 +43,7 @@ class UserServiceImpl implements UserService {
             return gitHubService.getUserRepos(username);
         } catch (Throwable t) {
             LOGGER.error("Failed to get GitHub user", t);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get GitHub user repos");
+            throw t;
         }
     }
 }
